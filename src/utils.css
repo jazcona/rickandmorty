@@ -1,0 +1,234 @@
+/* Efectos de glassmorphism y utilidades avanzadas */
+
+/* Clase glassmorphism para elementos flotantes */
+.glass {
+	background: rgba(255, 255, 255, 0.05);
+	backdrop-filter: blur(20px);
+	border: 1px solid rgba(255, 255, 255, 0.1);
+	box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+}
+
+.glass-dark {
+	background: rgba(13, 27, 42, 0.8);
+	backdrop-filter: blur(20px);
+	border: 1px solid rgba(151, 206, 76, 0.2);
+	box-shadow: var(--rm-shadow-lg);
+}
+
+/* Efectos de hover mejorados */
+.hover-lift {
+	transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.hover-lift:hover {
+	transform: translateY(-5px);
+	box-shadow: var(--rm-shadow-lg);
+}
+
+/* Efectos de glow para elementos importantes */
+.glow-green {
+	box-shadow: 0 0 20px rgba(151, 206, 76, 0.3);
+}
+
+.glow-blue {
+	box-shadow: 0 0 20px rgba(68, 165, 199, 0.3);
+}
+
+.glow-purple {
+	box-shadow: 0 0 20px rgba(154, 95, 203, 0.3);
+}
+
+/* Animaciones de entrada */
+.fade-in-up {
+	animation: fadeInUp 0.6s ease-out;
+}
+
+@keyframes fadeInUp {
+	from {
+		opacity: 0;
+		transform: translateY(30px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+.fade-in-left {
+	animation: fadeInLeft 0.6s ease-out;
+}
+
+@keyframes fadeInLeft {
+	from {
+		opacity: 0;
+		transform: translateX(-30px);
+	}
+	to {
+		opacity: 1;
+		transform: translateX(0);
+	}
+}
+
+.fade-in-right {
+	animation: fadeInRight 0.6s ease-out;
+}
+
+@keyframes fadeInRight {
+	from {
+		opacity: 0;
+		transform: translateX(30px);
+	}
+	to {
+		opacity: 1;
+		transform: translateX(0);
+	}
+}
+
+/* Efectos de texto */
+.text-gradient {
+	background: var(--rm-gradient-primary);
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+	background-clip: text;
+}
+
+.text-shadow-glow {
+	text-shadow: 0 0 10px currentColor;
+}
+
+/* Botones especiales */
+.btn-rick {
+	background: var(--rm-gradient-primary);
+	color: white;
+	padding: 0.75rem 2rem;
+	border: none;
+	border-radius: var(--rm-border-radius);
+	font-weight: 600;
+	cursor: pointer;
+	transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+	position: relative;
+	overflow: hidden;
+}
+
+.btn-rick:hover {
+	transform: translateY(-2px);
+	box-shadow: var(--rm-shadow-lg);
+}
+
+.btn-rick::after {
+	content: '';
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	width: 0;
+	height: 0;
+	background: rgba(255, 255, 255, 0.2);
+	border-radius: 50%;
+	transform: translate(-50%, -50%);
+	transition: width 0.6s, height 0.6s;
+}
+
+.btn-rick:active::after {
+	width: 300px;
+	height: 300px;
+}
+
+/* Scrollbar con tema Rick & Morty */
+.custom-scrollbar::-webkit-scrollbar {
+	width: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+	background: var(--rm-bg-secondary);
+	border-radius: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+	background: var(--rm-gradient-primary);
+	border-radius: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+	background: linear-gradient(180deg, var(--rm-green-dark) 0%, var(--rm-blue-dark) 100%);
+}
+
+/* Efectos de partículas para fondos */
+.particles-bg {
+	position: relative;
+	overflow: hidden;
+}
+
+.particles-bg::before {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background-image: 
+		radial-gradient(circle at 25% 25%, rgba(151, 206, 76, 0.1) 2px, transparent 2px),
+		radial-gradient(circle at 75% 75%, rgba(68, 165, 199, 0.1) 2px, transparent 2px);
+	background-size: 60px 60px;
+	animation: particlesMove 20s linear infinite;
+	pointer-events: none;
+}
+
+@keyframes particlesMove {
+	0% { transform: translate(0, 0); }
+	100% { transform: translate(-60px, -60px); }
+}
+
+/* Estados de carga mejorados */
+.skeleton {
+	background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+	background-size: 200% 100%;
+	animation: skeletonLoading 1.5s infinite;
+}
+
+@keyframes skeletonLoading {
+	0% {
+		background-position: 200% 0;
+	}
+	100% {
+		background-position: -200% 0;
+	}
+}
+
+/* Utilidades de layout responsivo */
+.container-fluid {
+	width: 100%;
+	padding-right: 1rem;
+	padding-left: 1rem;
+	margin-right: auto;
+	margin-left: auto;
+}
+
+@media (min-width: 576px) {
+	.container-fluid {
+		max-width: 540px;
+	}
+}
+
+@media (min-width: 768px) {
+	.container-fluid {
+		max-width: 720px;
+	}
+}
+
+@media (min-width: 992px) {
+	.container-fluid {
+		max-width: 960px;
+	}
+}
+
+@media (min-width: 1200px) {
+	.container-fluid {
+		max-width: 1140px;
+	}
+}
+
+@media (min-width: 1400px) {
+	.container-fluid {
+		max-width: 1320px;
+	}
+}

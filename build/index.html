@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es" %sveltekit.theme%>
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" href="/favicon.png" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>Rick & Morty Explorer</title>
+		<meta name="description" content="Explora el universo de Rick & Morty con esta aplicación de escritorio" />
+		
+		<!-- Preconnect para mejorar performance -->
+		<link rel="preconnect" href="https://rickandmortyapi.com" />
+		
+		
+		<link rel="modulepreload" href="/_app/immutable/entry/start.BIozSnkN.js">
+		<link rel="modulepreload" href="/_app/immutable/chunks/DmSyC3uB.js">
+		<link rel="modulepreload" href="/_app/immutable/chunks/wEQNk92e.js">
+		<link rel="modulepreload" href="/_app/immutable/chunks/C_dvIEoE.js">
+		<link rel="modulepreload" href="/_app/immutable/entry/app.DG7xNGDP.js">
+		<link rel="modulepreload" href="/_app/immutable/chunks/BIxSByTi.js">
+		<link rel="modulepreload" href="/_app/immutable/chunks/BAwGpLIb.js">
+		<link rel="modulepreload" href="/_app/immutable/chunks/CJoBKGq9.js">
+	</head>
+	<body data-sveltekit-preload-data="hover">
+		<div style="display: contents">
+			<script>
+				{
+					__sveltekit_13x9cxo = {
+						base: ""
+					};
+
+					const element = document.currentScript.parentElement;
+
+					Promise.all([
+						import("/_app/immutable/entry/start.BIozSnkN.js"),
+						import("/_app/immutable/entry/app.DG7xNGDP.js")
+					]).then(([kit, app]) => {
+						kit.start(app, element);
+					});
+				}
+			</script>
+		</div>
+	</body>
+</html>
