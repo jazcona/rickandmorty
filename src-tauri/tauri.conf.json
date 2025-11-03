@@ -1,7 +1,7 @@
 {
   "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
   "productName": "Rick & Morty Explorer",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "identifier": "com.rickandmorty.explorer",
   "build": {
     "frontendDist": "../build",
