@@ -107,7 +107,7 @@
       "_index2.js"
     ],
     "css": [
-      "_app/immutable/assets/_layout.DipW4uEH.css"
+      "_app/immutable/assets/_layout.COu4qrYq.css"
     ]
   },
   "src/routes/+page.svelte": {
@@ -121,7 +121,7 @@
       "_context.js"
     ],
     "css": [
-      "_app/immutable/assets/_page.YrijbFIj.css"
+      "_app/immutable/assets/_page.BDn7yNQl.css"
     ]
   }
 }

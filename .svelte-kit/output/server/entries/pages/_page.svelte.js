@@ -1,10 +1,9 @@
-import { V as store_get, W as unsubscribe_stores, X as ensure_array_like, Y as attr, Z as attr_class, _ as bind_props, $ as head } from "../../chunks/index2.js";
+import { V as store_get, W as unsubscribe_stores, X as attr, Y as attr_class, Z as stringify, _ as bind_props, $ as ensure_array_like, a0 as head } from "../../chunks/index2.js";
 import { w as writable } from "../../chunks/index.js";
-import { f as fallback, e as escape_html } from "../../chunks/context.js";
-function html(value) {
-  var html2 = String(value ?? "");
-  var open = "<!---->";
-  return open + html2 + "<!---->";
+import { b as ssr_context, f as fallback, e as escape_html } from "../../chunks/context.js";
+function onDestroy(fn) {
+  /** @type {SSRContext} */
+  ssr_context.r.on_destroy(fn);
 }
 const currentSection = writable("characters");
 const loading = writable(false);
@@ -14,12 +13,12 @@ const currentPage = writable({
   locations: 1
 });
 const filters = writable({
-  characters: { name: "", status: "", gender: "" },
-  episodes: { name: "" },
-  locations: { name: "", type: "" }
+  search: "",
+  status: "",
+  species: "",
+  gender: ""
 });
 const modalData = writable(null);
-const showModal = writable(false);
 function Loading($$renderer) {
   var $$store_subs;
   if (store_get($$store_subs ??= {}, "$loading", loading)) {
@@ -33,15 +32,38 @@ function Loading($$renderer) {
 }
 function Modal($$renderer, $$props) {
   $$renderer.component(($$renderer2) => {
-    var $$store_subs;
-    if (store_get($$store_subs ??= {}, "$showModal", showModal) && store_get($$store_subs ??= {}, "$modalData", modalData)) {
+    let isOpen = fallback($$props["isOpen"], false);
+    let type = fallback($$props["type"], "");
+    let data = fallback($$props["data"], null);
+    if (isOpen && data) {
       $$renderer2.push("<!--[-->");
-      $$renderer2.push(`<div class="modal svelte-ta60gp"><div class="modal-content svelte-ta60gp"><button class="close svelte-ta60gp">×</button> <div class="modal-body svelte-ta60gp">${html(store_get($$store_subs ??= {}, "$modalData", modalData))}</div></div></div>`);
+      $$renderer2.push(`<div class="modal svelte-ta60gp"><div class="modal-content svelte-ta60gp"><button class="close svelte-ta60gp" aria-label="Cerrar modal">✕</button> `);
+      if (type === "character") {
+        $$renderer2.push("<!--[-->");
+        $$renderer2.push(`<div class="character-modal svelte-ta60gp"><div class="character-image svelte-ta60gp"><img${attr("src", data.image)}${attr("alt", data.name)} class="svelte-ta60gp"/></div> <div class="character-info svelte-ta60gp"><h2 class="svelte-ta60gp">${escape_html(data.name)}</h2> <div class="info-grid svelte-ta60gp"><div class="info-item svelte-ta60gp"><span class="label svelte-ta60gp">Estado:</span> <span${attr_class(`status-indicator status-${stringify(data.status.toLowerCase())}`, "svelte-ta60gp")}>${escape_html(data.status)}</span></div> <div class="info-item svelte-ta60gp"><span class="label svelte-ta60gp">Especie:</span> <span class="value svelte-ta60gp">${escape_html(data.species)}</span></div> <div class="info-item svelte-ta60gp"><span class="label svelte-ta60gp">Género:</span> <span class="value svelte-ta60gp">${escape_html(data.gender)}</span></div> <div class="info-item svelte-ta60gp"><span class="label svelte-ta60gp">Origen:</span> <span class="value svelte-ta60gp">${escape_html(data.origin.name)}</span></div> <div class="info-item svelte-ta60gp"><span class="label svelte-ta60gp">Ubicación:</span> <span class="value svelte-ta60gp">${escape_html(data.location.name)}</span></div> <div class="info-item svelte-ta60gp"><span class="label svelte-ta60gp">Episodios:</span> <span class="value svelte-ta60gp">${escape_html(data.episode.length)} apariciones</span></div></div></div></div>`);
+      } else {
+        $$renderer2.push("<!--[!-->");
+        if (type === "episode") {
+          $$renderer2.push("<!--[-->");
+          $$renderer2.push(`<div class="episode-modal svelte-ta60gp"><h2 class="svelte-ta60gp">${escape_html(data.name)}</h2> <div class="episode-details svelte-ta60gp"><div class="info-item svelte-ta60gp"><span class="label svelte-ta60gp">Episodio:</span> <span class="episode-code svelte-ta60gp">${escape_html(data.episode)}</span></div> <div class="info-item svelte-ta60gp"><span class="label svelte-ta60gp">Fecha de emisión:</span> <span class="value svelte-ta60gp">${escape_html(data.air_date)}</span></div> <div class="info-item svelte-ta60gp"><span class="label svelte-ta60gp">Personajes:</span> <span class="value svelte-ta60gp">${escape_html(data.characters.length)} personajes</span></div></div></div>`);
+        } else {
+          $$renderer2.push("<!--[!-->");
+          if (type === "location") {
+            $$renderer2.push("<!--[-->");
+            $$renderer2.push(`<div class="location-modal svelte-ta60gp"><h2 class="svelte-ta60gp">${escape_html(data.name)}</h2> <div class="location-details svelte-ta60gp"><div class="info-item svelte-ta60gp"><span class="label svelte-ta60gp">Tipo:</span> <span class="location-type svelte-ta60gp">${escape_html(data.type)}</span></div> <div class="info-item svelte-ta60gp"><span class="label svelte-ta60gp">Dimensión:</span> <span class="value svelte-ta60gp">${escape_html(data.dimension)}</span></div> <div class="info-item svelte-ta60gp"><span class="label svelte-ta60gp">Residentes:</span> <span class="value svelte-ta60gp">${escape_html(data.residents.length)} residentes</span></div></div></div>`);
+          } else {
+            $$renderer2.push("<!--[!-->");
+          }
+          $$renderer2.push(`<!--]-->`);
+        }
+        $$renderer2.push(`<!--]-->`);
+      }
+      $$renderer2.push(`<!--]--></div></div>`);
     } else {
       $$renderer2.push("<!--[!-->");
     }
     $$renderer2.push(`<!--]-->`);
-    if ($$store_subs) unsubscribe_stores($$store_subs);
+    bind_props($$props, { isOpen, type, data });
   });
 }
 function CharacterGrid($$renderer, $$props) {
@@ -144,6 +166,8 @@ function CharacterFilters($$renderer, $$props) {
   $$renderer.component(($$renderer2) => {
     let hasActiveFilters;
     let filters2 = fallback($$props["filters"], () => ({ search: "", status: "", species: "", gender: "" }), true);
+    onDestroy(() => {
+    });
     hasActiveFilters = filters2.search || filters2.status || filters2.species || filters2.gender;
     $$renderer2.push(`<div class="filters-container svelte-r8nrfy"><div class="filters-row svelte-r8nrfy"><div class="search-group svelte-r8nrfy"><input type="text" placeholder="Buscar por nombre..."${attr("value", filters2.search)} class="search-input svelte-r8nrfy"/></div> <div class="filter-group svelte-r8nrfy">`);
     $$renderer2.select(
@@ -273,7 +297,19 @@ async function fetchFromAPI(endpoint, params = {}) {
   }
 }
 async function fetchCharacters(page = 1, filters2 = {}) {
-  const params = { page, ...filters2 };
+  const params = { page };
+  if (filters2.search && filters2.search.trim()) {
+    params.name = filters2.search.trim();
+  }
+  if (filters2.status) {
+    params.status = filters2.status;
+  }
+  if (filters2.species) {
+    params.species = filters2.species;
+  }
+  if (filters2.gender) {
+    params.gender = filters2.gender;
+  }
   return await fetchFromAPI("character", params);
 }
 async function fetchEpisodes(page = 1, filters2 = {}) {
@@ -320,6 +356,10 @@ function _page($$renderer, $$props) {
       if (typeof window !== "undefined") {
         loadData();
       }
+    }
+    if (store_get($$store_subs ??= {}, "$currentSection", currentSection) === "characters" && typeof window !== "undefined") {
+      store_get($$store_subs ??= {}, "$filters", filters);
+      loadData();
     }
     head("1uha8ag", $$renderer2, ($$renderer3) => {
       $$renderer3.title(($$renderer4) => {
@@ -391,6 +431,7 @@ function _page($$renderer, $$props) {
     if (store_get($$store_subs ??= {}, "$modalData", modalData)) {
       $$renderer2.push("<!--[-->");
       Modal($$renderer2, {
+        isOpen: true,
         type: store_get($$store_subs ??= {}, "$modalData", modalData).type,
         data: store_get($$store_subs ??= {}, "$modalData", modalData).data
       });

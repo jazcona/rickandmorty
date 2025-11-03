@@ -1,4 +1,4 @@
-import { r as run_all, b as deferred, c as safe_equals, h as equals, o as object_prototype, i as array_prototype, j as get_descriptor, k as get_prototype_of, l as is_array, m as is_extensible, p as index_of, e as escape_html, n as noop, q as set_ssr_context, t as ssr_context, u as push$1, v as pop$1 } from "./context.js";
+import { r as run_all, c as deferred, h as safe_equals, i as equals, o as object_prototype, j as array_prototype, k as get_descriptor, l as get_prototype_of, m as is_array, p as is_extensible, q as index_of, e as escape_html, n as noop, t as set_ssr_context, b as ssr_context, u as push$1, v as pop$1 } from "./context.js";
 import { clsx as clsx$1 } from "clsx";
 import { B as BROWSER } from "./false.js";
 const DERIVED = 1 << 1;
@@ -2489,6 +2489,9 @@ function attributes(attrs, css_hash, classes, styles, flags = 0) {
   }
   return attr_str;
 }
+function stringify(value) {
+  return typeof value === "string" ? value : value == null ? "" : value + "";
+}
 function attr_class(value, hash, directives) {
   var result = to_class(value, hash, directives);
   return result ? ` class="${escape_html(result, true)}"` : "";
@@ -2537,7 +2540,7 @@ function ensure_array_like(array_like_or_iterator) {
   return [];
 }
 export {
-  head as $,
+  ensure_array_like as $,
   svelte_boundary_reset_onerror as A,
   Batch as B,
   COMMENT_NODE as C,
@@ -2561,11 +2564,12 @@ export {
   slot as U,
   store_get as V,
   unsubscribe_stores as W,
-  ensure_array_like as X,
-  attr as Y,
-  attr_class as Z,
+  attr as X,
+  attr_class as Y,
+  stringify as Z,
   bind_props as _,
   HYDRATION_END as a,
+  head as a0,
   HYDRATION_START as b,
   HYDRATION_START_ELSE as c,
   get as d,

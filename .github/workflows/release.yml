@@ -1,0 +1,153 @@
+name: 🚀 Release Rick & Morty Explorer
+
+on:
+  push:
+    tags:
+      - 'v*' # Triggers on version tags like v1.0.0, v1.1.0, etc.
+  workflow_dispatch: # Allows manual triggering from GitHub UI
+
+env:
+  CARGO_INCREMENTAL: 0
+  RUST_BACKTRACE: short
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # Linux builds
+          - platform: 'ubuntu-22.04'
+            args: '--target x86_64-unknown-linux-gnu'
+            target: 'x86_64-unknown-linux-gnu'
+            arch: 'x64'
+            os: 'linux'
+            
+          # Windows builds
+          - platform: 'windows-latest'
+            args: '--target x86_64-pc-windows-msvc'
+            target: 'x86_64-pc-windows-msvc'
+            arch: 'x64'
+            os: 'windows'
+            
+          # macOS builds - Intel
+          - platform: 'macos-latest'
+            args: '--target x86_64-apple-darwin'
+            target: 'x86_64-apple-darwin'
+            arch: 'x64'
+            os: 'macos'
+            
+          # macOS builds - Apple Silicon
+          - platform: 'macos-latest'
+            args: '--target aarch64-apple-darwin'
+            target: 'aarch64-apple-darwin'
+            arch: 'arm64'
+            os: 'macos'
+
+    runs-on: ${{ matrix.platform }}
+    
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 🦀 Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.target }}
+
+      - name: 📦 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: 🔧 Install frontend dependencies
+        run: npm ci
+
+      - name: 🏗️ Build frontend
+        run: npm run build
+
+      # Linux specific dependencies
+      - name: 📋 Install Linux dependencies
+        if: matrix.os == 'linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf libssl-dev
+
+      # Setup Rust cache
+      - name: 🗄️ Rust cache
+        uses: swatinem/rust-cache@v2
+        with:
+          workspaces: './src-tauri -> target'
+
+      - name: 🔨 Build Tauri app
+        uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tagName: ${{ github.ref_name }}
+          releaseName: 'Rick & Morty Explorer ${{ github.ref_name }}'
+          releaseBody: |
+            ## 🛸 Rick & Morty Explorer ${{ github.ref_name }}
+            
+            ### ✨ Características
+            - 🔍 Explorar personajes del universo Rick & Morty
+            - 📺 Navegar por episodios y temporadas
+            - 🌍 Descubrir ubicaciones interdimensionales
+            - 🎨 Interfaz moderna con temática Rick & Morty
+            - 🔧 Filtros avanzados de búsqueda
+            - 📱 Diseño responsive y accesible
+            
+            ### 📦 Descargas por Plataforma
+            
+            **Linux:**
+            - `.deb` - Para Ubuntu/Debian y derivados
+            - `.AppImage` - Ejecutable portable universal
+            
+            **Windows:**
+            - `.exe` - Instalador NSIS (recomendado)
+            - `.msi` - Instalador MSI
+            
+            **macOS:**
+            - `.dmg` - Imagen de disco para macOS
+            - Intel y Apple Silicon soportados
+            
+            ### 🚀 Instalación
+            
+            1. **Linux**: Descarga el `.deb` o `.AppImage`
+            2. **Windows**: Descarga y ejecuta el `.exe`
+            3. **macOS**: Descarga y abre el `.dmg`
+            
+            ### 🔧 Requisitos del Sistema
+            - **Linux**: Ubuntu 18.04+ / equivalent
+            - **Windows**: Windows 10+
+            - **macOS**: macOS 10.13+ (High Sierra)
+          releaseDraft: false
+          prerelease: false
+          args: ${{ matrix.args }}
+
+  # Job para crear changelog automático
+  changelog:
+    needs: build
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/')
+    
+    steps:
+      - name: 📥 Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 📝 Generate changelog
+        uses: orhun/git-cliff-action@v4
+        with:
+          config: cliff.toml
+          args: --verbose --unreleased --tag ${{ github.ref_name }}
+        env:
+          OUTPUT: CHANGELOG.md
+
+      - name: 📤 Upload changelog
+        uses: actions/upload-artifact@v4
+        with:
+          name: changelog
+          path: CHANGELOG.md

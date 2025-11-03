@@ -18,6 +18,37 @@ dist-ssr
 .idea
 .DS_Store
 *.suo
+
+# Tauri build artifacts
+src-tauri/target/
+src-tauri/WixTools/
+
+# SvelteKit
+build/
+.svelte-kit/
+
+# GitHub Actions artifacts
+*.tar.gz
+*.zip
+
+# Release artifacts (keep only in releases)
+*.deb
+*.AppImage
+*.exe
+*.msi
+*.dmg
+*.app
+
+# OS specific files
+Thumbs.db
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Temporary files
+*.tmp
+*.temp
+.cache/
 *.ntvs*
 *.njsproj
 *.sln

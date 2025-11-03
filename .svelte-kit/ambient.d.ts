@@ -74,7 +74,6 @@ declare module '$env/static/private' {
 	export const USERNAME: string;
 	export const npm_config_cache: string;
 	export const GNOME_DESKTOP_SESSION_ID: string;
-	export const TAURI_ENV_DEBUG: string;
 	export const npm_config_node_gyp: string;
 	export const PATH: string;
 	export const NODE: string;
@@ -205,7 +204,6 @@ declare module '$env/dynamic/private' {
 		USERNAME: string;
 		npm_config_cache: string;
 		GNOME_DESKTOP_SESSION_ID: string;
-		TAURI_ENV_DEBUG: string;
 		npm_config_node_gyp: string;
 		PATH: string;
 		NODE: string;

@@ -2,6 +2,22 @@
 
 Una aplicación de escritorio **moderna y futurista** para explorar el universo de Rick & Morty, construida con **Tauri 2.x**, **SvelteKit** y la **paleta de colores oficial** de la serie.
 
+## 📦 **Descargas Automáticas**
+
+### 🤖 Releases con GitHub Actions
+Los builds se generan automáticamente para **todas las plataformas**:
+
+| Plataforma | Formato | Descripción | Estado |
+|------------|---------|-------------|--------|
+| 🐧 **Linux** | `.deb` | Ubuntu/Debian | [![Linux](https://img.shields.io/badge/Linux-Ready-success)](https://github.com/jazcona/rickandmorty/releases) |
+| 🐧 **Linux** | `.AppImage` | Portable | [![AppImage](https://img.shields.io/badge/AppImage-Ready-success)](https://github.com/jazcona/rickandmorty/releases) |
+| 🪟 **Windows** | `.exe` | NSIS Installer | [![Windows](https://img.shields.io/badge/Windows-Ready-success)](https://github.com/jazcona/rickandmorty/releases) |
+| 🪟 **Windows** | `.msi` | MSI Installer | [![MSI](https://img.shields.io/badge/MSI-Ready-success)](https://github.com/jazcona/rickandmorty/releases) |
+| 🍎 **macOS** | `.dmg` | Disk Image | [![macOS](https://img.shields.io/badge/macOS-Ready-success)](https://github.com/jazcona/rickandmorty/releases) |
+| 🍎 **macOS** | `.app` | Intel + ARM | [![Universal](https://img.shields.io/badge/Universal-Ready-success)](https://github.com/jazcona/rickandmorty/releases) |
+
+**🎯 [Descargar Última Versión](https://github.com/jazcona/rickandmorty/releases/latest)**
+
 ## 🎨 **Nuevo Diseño Futurista**
 
 ### Paleta de Colores Rick & Morty
@@ -97,6 +113,47 @@ npm run dev
 ```bash
 npm run build
 ```
+
+## 🤖 **Automatización y CI/CD**
+
+### GitHub Actions Workflows
+
+#### 🚀 Release Workflow
+- **Trigger**: Creación de tags `v*` (ej: `v1.0.0`)
+- **Plataformas**: Linux, Windows, macOS (Intel + ARM)
+- **Salida**: GitHub Release con binarios para todas las plataformas
+
+```bash
+# Crear un release automático
+git tag v1.0.1
+git push origin main --tags
+```
+
+#### 🧪 Test Workflow  
+- **Trigger**: Push a `main` y Pull Requests
+- **Funciones**: Tests del frontend y verificación de builds
+
+### Scripts de Build Multiplataforma
+
+```bash
+# Build para plataforma actual
+npm run package
+
+# Builds específicos (requiere targets instalados)
+npm run tauri:build:linux     # Linux x86_64
+npm run tauri:build:windows   # Windows x86_64  
+npm run tauri:build:macos     # macOS Intel
+npm run tauri:build:macos-arm # macOS Apple Silicon
+
+# Build para todos los targets
+npm run tauri:build:all
+```
+
+### 📋 Documentación de Automatización
+
+- 📖 **[GitHub Actions Setup](GITHUB_ACTIONS.md)** - Configuración detallada de workflows
+- 🔧 **[Build Instructions](BUILD.md)** - Guía completa de empaquetado  
+- 📦 **[Dependencies](DEPENDENCIES.md)** - Dependencias por plataforma
 
 ## Tecnologías Utilizadas
 
