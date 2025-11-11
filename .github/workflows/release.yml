@@ -1,5 +1,9 @@
 name: 🚀 Release Rick & Morty Explorer
 
+permissions:
+  contents: write
+  packages: write
+
 on:
   push:
     tags:
@@ -83,7 +87,7 @@ jobs:
       - name: 🔨 Build Tauri app
         uses: tauri-apps/tauri-action@v0
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.TAURI_RELEASE_TOKEN }}
         with:
           tagName: ${{ github.ref_name }}
           releaseName: 'Rick & Morty Explorer ${{ github.ref_name }}'
