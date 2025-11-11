@@ -54,16 +54,74 @@ jobs:
       - name: 📥 Checkout repository
         uses: actions/checkout@v4
 
+      # Setup Rust for non-Windows platforms
       - name: 🦀 Setup Rust
+        if: matrix.os != 'windows'
         uses: dtolnay/rust-toolchain@stable
         with:
           targets: ${{ matrix.target }}
+
+      # Setup Rust for Windows with explicit MSVC toolchain
+      - name: 🦀 Setup Rust (MSVC)
+        if: matrix.os == 'windows'
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable-x86_64-pc-windows-msvc
+          profile: minimal
+          override: true
 
       - name: 📦 Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
           cache: 'npm'
+
+      # Windows specific: Install Chocolatey if missing
+      - name: 🍫 Install Chocolatey (if missing)
+        if: matrix.os == 'windows'
+        shell: powershell
+        run: |
+          if (-not (Get-Command choco -ErrorAction SilentlyContinue)) {
+            Set-ExecutionPolicy Bypass -Scope Process -Force
+            iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
+          }
+
+      # Windows specific: Install WiX Toolset via Chocolatey
+      - name: 🔧 Install WiX Toolset via choco
+        if: matrix.os == 'windows'
+        shell: powershell
+        run: |
+          choco install wixtoolset -y --no-progress
+          choco feature enable -n showDownloadProgress
+
+      # Windows specific: Add WiX to PATH
+      - name: 🛠️ Add WiX to PATH
+        if: matrix.os == 'windows'
+        shell: powershell
+        run: |
+          $possiblePaths = @(
+            'C:\Program Files (x86)\WiX Toolset v3.11\bin',
+            'C:\Program Files (x86)\WiX Toolset\bin'
+          )
+          $wixBin = $possiblePaths | Where-Object { Test-Path $_ } | Select-Object -First 1
+          if (-not $wixBin) {
+            Write-Host "WiX bin not found in Program Files; checking Tauri LocalAppData path"
+            $tauriLocal = Join-Path $env:LOCALAPPDATA 'tauri\WixTools314'
+            if (Test-Path $tauriLocal) { $wixBin = $tauriLocal }
+          }
+          if (-not $wixBin) {
+            Write-Host "WiX binary path not found. Aborting." ; exit 1
+          }
+          Write-Host "Adding WiX bin to PATH: $wixBin"
+          Add-Content -Path $env:GITHUB_PATH -Value $wixBin
+
+      # Windows specific: Verify WiX candle.exe is available
+      - name: ✅ Verify WiX candle.exe is available
+        if: matrix.os == 'windows'
+        shell: powershell
+        run: |
+          where.exe candle
+          candle -? | Out-String | Select-String 'candle'
 
       - name: 🔧 Install frontend dependencies
         run: npm ci
